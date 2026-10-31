@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Stego Suite</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e293b">
+    <!-- QR Code Generation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- QR Code Scanning Library -->
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode/html5-qrcode.min.js"></script>
+</head>
+<body>
+
+    <!-- Slide-Out Sidebar Navigation -->
+    <nav id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+            <button id="close-menu-btn" class="icon-btn">×</button>
+        </div>
+        <ul class="menu-list">
+            <li id="menu-gen-key">🔑 Get Encryption ID</li>
+            <li id="menu-friends">👥 Friends & Keys</li>
+            <li id="menu-export">💾 Export Key File</li>
+        </ul>
+    </nav>
+
+    <!-- Main Content Wrapper -->
+    <div id="main-wrapper">
+        <header class="top-bar">
+            <button id="menu-btn" class="icon-btn">☰</button>
+            <h1>StegoCrypt Pro</h1>
+        </header>
+
+        <main class="content">
+            <!-- User ID & Shared Key Display Section -->
+            <section class="card id-card">
+                <h2>Your Quantum ID & Key QR</h2>
+                <div id="qr-container"></div>
+                <p id="user-id-display">Generating Encryption Key...</p>
+                <div class="btn-group">
+                    <button id="btn-rekey" class="btn warning">Regenerate Dynamic Key</button>
+                    <button id="btn-export-key" class="btn">Download Hard Storage Key</button>
+                </div>
+            </section>
+
+            <!-- Friends List Carousel -->
+            <section class="card">
+                <h2>Friends List (Key Exchange)</h2>
+                <div class="carousel-container">
+                    <button id="prev-friend" class="carousel-nav">‹</button>
+                    <div id="friends-carousel" class="carousel">
+                        <div class="empty-state">No friends added. Upload a QR code file below.</div>
+                    </div>
+                    <button id="next-friend" class="carousel-nav">›</button>
+                </div>
+                
+                <div class="qr-actions">
+                    <label for="qr-file-input" class="btn file-label">Upload QR Code File</label>
+                    <input type="file" id="qr-file-input" accept="image/*" hidden>
+                </div>
+                <div id="qr-reader" style="width: 100%; display: none;"></div>
+            </section>
+
+            <!-- Encoding & Encrypting Section -->
+            <section class="card">
+                <h2>Encode Text / Photo Steganography</h2>
+                <label>Select Target Friend Key:</label>
+                <select id="friend-key-select" class="input-field"></select>
+
+                <textarea id="secret-text" class="input-field" placeholder="Enter plaintext message to encrypt..."></textarea>
+                
+                <label for="stego-image-input" class="file-label">Choose Base Image for Bitmapping</label>
+                <input type="file" id="stego-image-input" accept="image/png, image/jpeg" hidden>
+                <span id="stego-file-name">No file selected</span>
+
+                <div class="btn-group">
+                    <button id="btn-encrypt-text" class="btn">Encrypt Plaintext Only</button>
+                    <button id="btn-encode-stego" class="btn primary">Encode Message into Image</button>
+                </div>
+
+                <div id="output-area">
+                    <textarea id="ciphertext-output" class="input-field" readonly placeholder="Encrypted Output String..."></textarea>
+                    <canvas id="stego-canvas" style="display:none;"></canvas>
+                    <a id="download-stego-link" class="btn success" style="display:none;">Download Stego Photo</a>
+                </div>
+            </section>
+
+            <!-- Decoding & Decrypting Section -->
+            <section class="card">
+                <h2>Decode Stego Photo / Decrypt Message</h2>
+                <label for="decode-image-input" class="file-label">Upload Stego Image File</label>
+                <input type="file" id="decode-image-input" accept="image/png" hidden>
+                <span id="decode-file-name">No file selected</span>
+
+                <textarea id="decrypt-input" class="input-field" placeholder="Or paste encrypted text string here..."></textarea>
+                <button id="btn-decode" class="btn primary">Decode & Decrypt</button>
+
+                <div id="decrypted-output" class="result-box"></div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then((reg) => console.log('Service Worker registered!'))
+            .catch((err) => console.log('Service Worker failed:', err));
+        });
+      }
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
