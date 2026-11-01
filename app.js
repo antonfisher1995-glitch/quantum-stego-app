@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const extractedCipher = decodeMessageFromCanvas(canvas, ctx);
                 if (extractedCipher) {
                     try {
-                        const targetKeySelect = document.getElementById('friend-key-select');
+                        const targetKeySelect = document.getElementById('decode-friend-key-select');
                         let activeKey = currentKeyPair;
                         if (targetKeySelect.value) {
                             const rawKey = Uint8Array.from(atob(targetKeySelect.value), c => c.charCodeAt(0));
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cipherText = document.getElementById('decrypt-input').value;
         if (!cipherText) return;
         try {
-            const targetKeySelect = document.getElementById('friend-key-select');
+            const targetKeySelect = document.getElementById('decode-friend-key-select');
             let activeKey = currentKeyPair;
             if (targetKeySelect.value) {
                 const rawKey = Uint8Array.from(atob(targetKeySelect.value), c => c.charCodeAt(0));
@@ -303,9 +303,14 @@ function addFriendFromQR(qrString) {
 
 function updateFriendsCarousel() {
     const container = document.getElementById('friends-carousel');
-    const select = document.getElementById('friend-key-select');
+    const encodeSelect = document.getElementById('friend-key-select');
+    const decodeSelect = document.getElementById('decode-friend-key-select');
+    
     container.innerHTML = '';
-    select.innerHTML = '<option value="">Use My Own Key (Default)</option>';
+    const defaultOptionHTML = '<option value="">Use My Own Key (Default)</option>';
+    
+    encodeSelect.innerHTML = defaultOptionHTML;
+    decodeSelect.innerHTML = defaultOptionHTML;
 
     friendsList.forEach(friend => {
         const card = document.createElement('div');
@@ -313,9 +318,14 @@ function updateFriendsCarousel() {
         card.innerHTML = `<strong>${friend.id}</strong><p>Key Loaded</p>`;
         container.appendChild(card);
 
-        const opt = document.createElement('option');
-        opt.value = friend.key;
-        opt.innerText = friend.id;
-        select.appendChild(opt);
+        const opt1 = document.createElement('option');
+        opt1.value = friend.key;
+        opt1.innerText = friend.id;
+        encodeSelect.appendChild(opt1);
+
+        const opt2 = document.createElement('option');
+        opt2.value = friend.key;
+        opt2.innerText = friend.id;
+        decodeSelect.appendChild(opt2);
     });
 }
